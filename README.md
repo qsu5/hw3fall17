@@ -17,7 +17,7 @@ to this assignment scattered throughout the handout:
 
 Nokogiri docs: http://nokogiri.org/
 
-Docs for Ruby libraries Net::HTTP, URI, CGI:  http://ruby-doc.org/stdlib-1.9.3
+Docs for Ruby libraries Net::HTTP, URI, CGI:  http://ruby-doc.org/stdlib-2.3.0
 
 Note:  Before starting to work on this assignment, run the following command from
 the directory containing this README file:
