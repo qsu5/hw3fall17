@@ -19,14 +19,16 @@ class OracleOfBacon
   validates_presence_of :api_key
   validate :from_does_not_equal_to
 
-   def from_does_not_equal_to
-#    if @from == @to
-#      self.errors.add(:from, 'cannot be the same as To')
-#    end
+  def from_does_not_equal_to
+    if @from == @to
+      self.errors.add(:from, 'cannot be the same as To')
+    end
   end
 
   def initialize(api_key='')
-    # your code here
+    @api_key = api_key
+    @from = "Kevin Bacon"
+    @to = "Kevin Bacon"
   end
 
   def find_connections
@@ -42,13 +44,16 @@ class OracleOfBacon
       # convert all of these into a generic OracleOfBacon::NetworkError,
       #  but keep the original error message
       # your code here
+      raise OracleOfBacon::NetworkError
     end
     # your code here: create the OracleOfBacon::Response object
+    response = Response.new(xml)
   end
 
   def make_uri_from_arguments
     # your code here: set the @uri attribute to properly-escaped URI
     # constructed from the @from, @to, @api_key arguments
+    @uri= 	"http://oracleofbacon.org/cgi-bin/xml?p="+@api_key+"&a="+CGI::escape(@to)+"&b="+CGI::escape(@from)
   end
       
   class Response
@@ -76,6 +81,9 @@ class OracleOfBacon
     def parse_error_response
      #Your code here.  Assign @type and @data
      # based on type attribute and body of the error element
+     @type = @doc.xpath('/error/@type').text.to_sym
+     @data = @doc.xpath('/error').map(&:text)[0]
+
     end
 
     def parse_spellcheck_response
@@ -86,6 +94,9 @@ class OracleOfBacon
 
     def parse_graph_response
       #Your code here
+      @type = :graph
+      @data = @doc.xpath('//link').map{|n| n.content.to_s.strip.gsub(/\s{2,}/,'  ')}[0].split(/\s{2}/)
+        
     end
 
     def parse_unknown_response
